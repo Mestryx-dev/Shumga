@@ -12,15 +12,28 @@ type GameState = {
   score: number
 }
 
+/** Arrow keys + WASD + ZQSD (AZERTY) */
 function keyToDir(key: string): { dx: number; dy: number } | null {
   switch (key) {
     case 'ArrowUp':
+    case 'w':
+    case 'W':
+    case 'z':
+    case 'Z':
       return { dx: 0, dy: -1 }
     case 'ArrowDown':
+    case 's':
+    case 'S':
       return { dx: 0, dy: 1 }
     case 'ArrowLeft':
+    case 'a':
+    case 'A':
+    case 'q':
+    case 'Q':
       return { dx: -1, dy: 0 }
     case 'ArrowRight':
+    case 'd':
+    case 'D':
       return { dx: 1, dy: 0 }
     default:
       return null
@@ -67,15 +80,10 @@ function gameReducer(state: GameState, action: Action): GameState {
 
   const { dx, dy } = action.dir
   const head = state.snake[0]
-  const nextHead = { x: head.x + dx, y: head.y + dy }
-
-  if (
-    nextHead.x < 0 ||
-    nextHead.x >= GRID ||
-    nextHead.y < 0 ||
-    nextHead.y >= GRID
-  ) {
-    return { ...state, gameOver: true }
+  // Wrap around edges (no walls — exit one side, enter the opposite)
+  const nextHead = {
+    x: (head.x + dx + GRID) % GRID,
+    y: (head.y + dy + GRID) % GRID,
   }
 
   const hitSelf = state.snake.some(
@@ -106,16 +114,61 @@ function gameReducer(state: GameState, action: Action): GameState {
   }
 }
 
+function SnakeDirButton({
+  symbol,
+  ariaLabel,
+  dx,
+  dy,
+  disabled,
+  onDir,
+  className = '',
+}: {
+  symbol: string
+  ariaLabel: string
+  dx: number
+  dy: number
+  disabled: boolean
+  onDir: (dx: number, dy: number) => void
+  className?: string
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onClick={() => onDir(dx, dy)}
+      className={`touch-manipulation flex min-h-11 min-w-11 select-none items-center justify-center rounded-sm border-2 border-neon-cyan/50 bg-void/90 font-body text-xl leading-none text-neon-cyan shadow-[inset_0_0_12px_rgba(0,0,0,0.4)] transition hover:border-coin hover:text-coin active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 md:min-h-12 md:min-w-12 md:text-2xl ${className}`}
+    >
+      {symbol}
+    </button>
+  )
+}
+
 export function SnakeGame() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initialState)
   const dirRef = useRef({ dx: 1, dy: 0 })
   const pendingDirRef = useRef<{ dx: number; dy: number } | null>(null)
   const [paused, setPaused] = useState(false)
+  const controlsRef = useRef<HTMLDivElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
+
+  const gameOverRef = useRef(state.gameOver)
+  const pausedRef = useRef(paused)
+
+  useEffect(() => {
+    gameOverRef.current = state.gameOver
+    pausedRef.current = paused
+  }, [state.gameOver, paused])
 
   const reset = useCallback(() => {
     dirRef.current = { dx: 1, dy: 0 }
     pendingDirRef.current = null
     dispatch({ type: 'reset' })
+  }, [])
+
+  const queueDirection = useCallback((dx: number, dy: number) => {
+    if (gameOverRef.current || pausedRef.current) return
+    pendingDirRef.current = { dx, dy }
   }, [])
 
   const tick = useCallback(() => {
@@ -145,24 +198,38 @@ export function SnakeGame() {
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
-  const onKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
+  // Keyboard: only when focus/event target is inside the play area (grid + D-pad)
+  useEffect(() => {
+    const root = controlsRef.current
+    if (!root) return
+
+    const handler = (e: KeyboardEvent) => {
+      if (gameOverRef.current || pausedRef.current) return
+      const t = e.target as Node | null
+      if (!t || !root.contains(t)) return
       if (e.key === 'Escape') {
-        const el = e.currentTarget as HTMLElement
-        el.blur()
+        e.preventDefault()
+        ;(e.target as HTMLElement).blur?.()
         return
       }
       const dir = keyToDir(e.key)
       if (!dir) return
       e.preventDefault()
-      if (state.gameOver) return
       pendingDirRef.current = dir
-    },
-    [state.gameOver],
-  )
+    }
+
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [])
+
+  const focusGrid = useCallback(() => {
+    gridRef.current?.focus()
+  }, [])
 
   const snakeIndex = new Map<string, number>()
   state.snake.forEach((p, i) => snakeIndex.set(`${p.x},${p.y}`, i))
+
+  const controlsDisabled = state.gameOver || paused
 
   return (
     <div className="pixel-border rounded-sm border border-neon-magenta/30 bg-ridge/50 p-5 md:p-6">
@@ -181,48 +248,95 @@ export function SnakeGame() {
           </button>
         </div>
       </div>
-      <p className="mb-2 font-body text-base text-mist/90" aria-live="polite">
-        {state.gameOver
-          ? 'Game over — Rejouer pour recommencer.'
-          : paused
-            ? 'Pause (onglet en arrière-plan).'
-            : 'Focus la grille, puis flèches pour diriger. Échap libère le focus.'}
-      </p>
-      <div
-        tabIndex={0}
-        role="application"
-        aria-label="Snake, grille dix par dix. Utilise les flèches pour déplacer le serpent."
-        onKeyDown={onKeyDown}
-        className="mx-auto w-fit rounded-sm border-2 border-neon-cyan/40 p-2 outline-none focus-visible:ring-2 focus-visible:ring-coin focus-visible:ring-offset-2 focus-visible:ring-offset-void"
-      >
+
+      <div ref={controlsRef} className="space-y-4">
+        <p className="font-body text-base text-mist/90" aria-live="polite">
+          {state.gameOver
+            ? 'Game over — Rejouer pour recommencer.'
+            : paused
+              ? 'Pause (onglet en arrière-plan).'
+              : 'Sans murs : tu réapparais de l’autre côté. Flèches / WASD / ZQSD · Pavé · Échap libère le focus.'}
+        </p>
+
         <div
-          className="grid gap-0.5 bg-void/90 p-1"
-          style={{
-            gridTemplateColumns: `repeat(${GRID}, minmax(0, 1fr))`,
-            width: 'min(72vw, 280px)',
-          }}
+          ref={gridRef}
+          tabIndex={0}
+          role="application"
+          aria-label="Snake sans murs : les bords téléportent de l’autre côté. Flèches, WASD ou ZQSD."
+          onClick={focusGrid}
+          className="mx-auto w-fit cursor-pointer rounded-sm border-2 border-neon-cyan/40 p-2 outline-none focus-visible:ring-2 focus-visible:ring-coin focus-visible:ring-offset-2 focus-visible:ring-offset-void"
         >
-          {Array.from({ length: GRID * GRID }, (_, i) => {
-            const x = i % GRID
-            const y = Math.floor(i / GRID)
-            const si = snakeIndex.get(`${x},${y}`)
-            const isHead = si === 0
-            const isApple = state.apple.x === x && state.apple.y === y
-            return (
-              <div
-                key={i}
-                className={`aspect-square rounded-[1px] border border-white/5 ${
-                  isApple
-                    ? 'bg-coin shadow-[0_0_10px_rgba(255,217,61,0.5)]'
-                    : si !== undefined
-                      ? isHead
-                        ? 'bg-neon-cyan shadow-[0_0_8px_rgba(34,211,238,0.45)]'
-                        : 'bg-neon-magenta/80'
-                      : 'bg-depth/80'
-                }`}
-              />
-            )
-          })}
+          <div
+            className="grid gap-0.5 bg-void/90 p-1"
+            style={{
+              gridTemplateColumns: `repeat(${GRID}, minmax(0, 1fr))`,
+              width: 'min(72vw, 280px)',
+            }}
+          >
+            {Array.from({ length: GRID * GRID }, (_, i) => {
+              const x = i % GRID
+              const y = Math.floor(i / GRID)
+              const si = snakeIndex.get(`${x},${y}`)
+              const isHead = si === 0
+              const isApple = state.apple.x === x && state.apple.y === y
+              return (
+                <div
+                  key={i}
+                  className={`aspect-square rounded-[1px] border border-white/5 ${
+                    isApple
+                      ? 'bg-coin shadow-[0_0_10px_rgba(255,217,61,0.5)]'
+                      : si !== undefined
+                        ? isHead
+                          ? 'bg-neon-cyan shadow-[0_0_8px_rgba(34,211,238,0.45)]'
+                          : 'bg-neon-magenta/80'
+                        : 'bg-depth/80'
+                  }`}
+                />
+              )
+            })}
+          </div>
+        </div>
+
+        <div
+          className="mx-auto flex w-fit flex-col items-center gap-1"
+          role="group"
+          aria-label="Contrôles directionnels"
+        >
+          <SnakeDirButton
+            symbol="↑"
+            ariaLabel="Haut"
+            dx={0}
+            dy={-1}
+            disabled={controlsDisabled}
+            onDir={queueDirection}
+            className="w-14 md:w-16"
+          />
+          <div className="flex gap-1">
+            <SnakeDirButton
+              symbol="←"
+              ariaLabel="Gauche"
+              dx={-1}
+              dy={0}
+              disabled={controlsDisabled}
+              onDir={queueDirection}
+            />
+            <SnakeDirButton
+              symbol="↓"
+              ariaLabel="Bas"
+              dx={0}
+              dy={1}
+              disabled={controlsDisabled}
+              onDir={queueDirection}
+            />
+            <SnakeDirButton
+              symbol="→"
+              ariaLabel="Droite"
+              dx={1}
+              dy={0}
+              disabled={controlsDisabled}
+              onDir={queueDirection}
+            />
+          </div>
         </div>
       </div>
     </div>
