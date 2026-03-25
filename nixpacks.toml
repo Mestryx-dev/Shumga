@@ -1,0 +1,5 @@
+# Dokploy / Nixpacks: Vite 8 requires Node ^20.19 || >=22.12 (CustomEvent in CLI).
+# Default Nixpacks image used Node 18 and broke `npm run build`.
+
+[variables]
+NIXPACKS_NODE_VERSION = "22"
