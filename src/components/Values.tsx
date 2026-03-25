@@ -4,8 +4,7 @@ import {
   fadeUpTransition,
   fadeUpVisible,
   staggerContainer,
-  staggerItemHidden,
-  staggerItemVisible,
+  staggerItemVariants,
 } from '../lib/motion'
 
 const cards = [
@@ -114,13 +113,7 @@ export function Values() {
             {cards.map((card) => (
               <motion.li
                 key={card.title}
-                variants={{
-                  hidden: staggerItemHidden,
-                  visible: {
-                    ...staggerItemVisible,
-                    transition: fadeUpTransition,
-                  },
-                }}
+                variants={staggerItemVariants}
                 className="group rounded-2xl border border-white/8 bg-ridge/40 p-8 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)] transition hover:border-ember/25 hover:bg-ridge/60"
               >
                 <div className="mb-5 inline-flex rounded-xl bg-void/80 p-3 text-ember transition group-hover:text-ember-hot">

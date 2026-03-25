@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.cursor/
+.cursordocs
+.cursorrules.local
+.continue/
+.env
+.env.*
+!.env.example

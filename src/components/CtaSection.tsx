@@ -11,7 +11,7 @@ export function CtaSection() {
       aria-labelledby="cta-heading"
     >
       <motion.div
-        className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-ember/25 bg-gradient-to-br from-ridge/90 via-depth to-void px-8 py-16 text-center md:px-16 md:py-20"
+        className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-ember/25 bg-linear-to-br from-ridge/90 via-depth to-void px-8 py-16 text-center md:px-16 md:py-20"
         initial={reduce ? false : fadeUpHidden}
         whileInView={reduce ? undefined : fadeUpVisible}
         viewport={{ once: true, margin: '-60px' }}

@@ -23,7 +23,7 @@ export function Hero() {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(90vw,520px)] w-[min(90vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.06] bg-gradient-to-br from-ridge/40 to-transparent blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[min(90vw,520px)] w-[min(90vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/6 bg-linear-to-br from-ridge/40 to-transparent blur-3xl"
         aria-hidden
       />
 
@@ -44,7 +44,7 @@ export function Hero() {
           transition={{ ...fadeUpTransition, delay: 0.12 }}
         >
           L’essentiel,
-          <span className="block bg-gradient-to-r from-snow via-mist to-ember bg-clip-text text-transparent">
+          <span className="block bg-linear-to-r from-snow via-mist to-ember bg-clip-text text-transparent">
             en altitude.
           </span>
         </motion.h1>

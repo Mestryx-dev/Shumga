@@ -47,7 +47,7 @@ export function PreviewGallery() {
           {placeholders.map((item, i) => (
             <motion.div
               key={item.label}
-              className={`relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${item.from} ${item.to} md:aspect-[3/4]`}
+              className={`relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br ${item.from} ${item.to} md:aspect-[3/4]`}
               initial={reduce ? false : { opacity: 0, scale: 0.96 }}
               whileInView={reduce ? undefined : { opacity: 1, scale: 1 }}
               viewport={{ once: true }}
