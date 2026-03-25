@@ -2,6 +2,7 @@ import { CtaSection } from './components/CtaSection'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { MiniGamesSection } from './components/MiniGamesSection'
 import { PreviewGallery } from './components/PreviewGallery'
 import { RetroMarquee } from './components/RetroMarquee'
 import { ScrollProgressBar } from './components/ScrollProgressBar'
@@ -26,6 +27,7 @@ function App() {
           <Hero />
           <RetroMarquee />
           <Values />
+          <MiniGamesSection />
           <PreviewGallery />
           <CtaSection />
         </main>
