@@ -25,6 +25,7 @@
 
 @layer base {
   html {
+    color-scheme: dark;
     scroll-behavior: smooth;
   }
 
@@ -54,6 +55,21 @@
   :focus-visible {
     outline: 2px solid var(--color-neon-cyan);
     outline-offset: 3px;
+  }
+}
+
+/* Shared keyboard focus ring (WCAG 2.2 — visible focus). */
+@layer utilities {
+  .shumga-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-void;
+  }
+}
+
+/* Respect system preference for less transparency / blur (macOS, some browsers). */
+@media (prefers-reduced-transparency: reduce) {
+  .birthday-backdrop {
+    backdrop-filter: none;
+    background-color: color-mix(in srgb, var(--color-void) 92%, transparent);
   }
 }
 

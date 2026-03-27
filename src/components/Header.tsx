@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 const nav = [
   { href: '#accueil', label: 'Spawn' },
   { href: '#loadout', label: 'Loadout' },
+  { href: '#arcade', label: 'Arcade' },
   { href: '#apercu', label: 'Galerie' },
 ]
 
@@ -20,7 +21,7 @@ export function Header() {
         <div className="flex items-center justify-between gap-4">
           <a
             href="#accueil"
-            className="group shrink-0 font-pixel text-[0.65rem] leading-tight text-neon-cyan transition [text-shadow:0_0_12px_rgba(34,211,238,0.5)] hover:text-coin md:text-[0.75rem]"
+            className="shumga-focus group shrink-0 rounded-sm font-pixel text-[0.65rem] leading-tight text-neon-cyan transition [text-shadow:0_0_12px_rgba(34,211,238,0.5)] hover:text-coin md:text-[0.75rem]"
           >
             SHUMGA
             <span className="mt-0.5 block font-body text-xs font-normal normal-case text-mist group-hover:text-snow">
@@ -35,7 +36,7 @@ export function Header() {
               <a
                 key={item.href}
                 href={item.href}
-                className="font-body text-lg text-mist transition hover:text-neon-magenta"
+                className="shumga-focus rounded-sm font-body text-lg text-mist transition hover:text-neon-magenta"
               >
                 {item.label}
               </a>
@@ -43,7 +44,7 @@ export function Header() {
           </nav>
           <a
             href="#contact"
-            className="shrink-0 rounded-sm border-2 border-coin bg-coin/90 px-4 py-2 font-body text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_24px_-4px_rgba(255,217,61,0.6)] transition hover:bg-coin hover:shadow-[0_0_32px_-4px_rgba(255,217,61,0.85)] focus-visible:ring-2 focus-visible:ring-neon-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-void"
+            className="shumga-focus shrink-0 rounded-sm border-2 border-coin bg-coin/90 px-4 py-2 font-body text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_24px_-4px_rgba(255,217,61,0.6)] transition hover:bg-coin hover:shadow-[0_0_32px_-4px_rgba(255,217,61,0.85)]"
           >
             Insert coin
           </a>
@@ -56,7 +57,7 @@ export function Header() {
             <a
               key={item.href}
               href={item.href}
-              className="whitespace-nowrap font-body text-base text-mist"
+              className="shumga-focus whitespace-nowrap rounded-sm font-body text-base text-mist"
             >
               {item.label}
             </a>

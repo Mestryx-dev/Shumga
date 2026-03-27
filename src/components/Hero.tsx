@@ -78,13 +78,13 @@ export function Hero() {
           >
             <a
               href="#contact"
-              className="pixel-border inline-flex items-center justify-center rounded-sm bg-coin px-8 py-3.5 text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_32px_-6px_rgba(255,217,61,0.7)] transition hover:bg-coin-hot"
+              className="shumga-focus pixel-border inline-flex items-center justify-center rounded-sm bg-coin px-8 py-3.5 text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_32px_-6px_rgba(255,217,61,0.7)] transition hover:bg-coin-hot"
             >
               High score — contact
             </a>
             <a
               href="#loadout"
-              className="inline-flex items-center justify-center rounded-sm border-2 border-neon-cyan/50 bg-void/60 px-8 py-3.5 text-lg font-bold text-neon-cyan backdrop-blur-sm transition hover:border-neon-cyan hover:bg-neon-cyan/10"
+              className="shumga-focus inline-flex items-center justify-center rounded-sm border-2 border-neon-cyan/50 bg-void/60 px-8 py-3.5 text-lg font-bold text-neon-cyan backdrop-blur-sm transition hover:border-neon-cyan hover:bg-neon-cyan/10"
             >
               Voir le loadout
             </a>

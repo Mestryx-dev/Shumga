@@ -15,17 +15,17 @@ export function Footer() {
         <nav aria-label="Liens de pied de page">
           <ul className="flex flex-wrap items-center justify-center gap-6 font-body text-lg text-mist">
             <li>
-              <a href="#" className="transition hover:text-neon-magenta">
+              <a href="#" className="shumga-focus rounded-sm transition hover:text-neon-magenta">
                 Mentions légales
               </a>
             </li>
             <li>
-              <a href="#" className="transition hover:text-neon-magenta">
+              <a href="#" className="shumga-focus rounded-sm transition hover:text-neon-magenta">
                 Confidentialité
               </a>
             </li>
             <li>
-              <a href="#accueil" className="transition hover:text-coin">
+              <a href="#accueil" className="shumga-focus rounded-sm transition hover:text-coin">
                 Respawn (haut)
               </a>
             </li>

@@ -70,7 +70,7 @@ export function CtaSection() {
         >
           <a
             href="mailto:contact@shumga.example"
-            className="pixel-border inline-flex w-full items-center justify-center rounded-sm bg-coin px-10 py-4 text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_48px_-8px_rgba(255,217,61,0.65)] transition hover:bg-coin-hot sm:w-auto"
+            className="shumga-focus pixel-border inline-flex w-full items-center justify-center rounded-sm bg-coin px-10 py-4 text-lg font-bold uppercase tracking-wide text-void shadow-[0_0_48px_-8px_rgba(255,217,61,0.65)] transition hover:bg-coin-hot sm:w-auto"
           >
             contact@shumga.example
           </a>
