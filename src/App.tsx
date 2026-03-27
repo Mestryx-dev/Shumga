@@ -1,3 +1,4 @@
+import { BirthdaySplash } from './components/BirthdaySplash'
 import { CtaSection } from './components/CtaSection'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
@@ -33,6 +34,7 @@ function App() {
         </main>
         <Footer />
       </div>
+      <BirthdaySplash />
     </>
   )
 }
